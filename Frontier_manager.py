@@ -3,53 +3,51 @@
 # --------------------------
 class FrontierManager:
     """
-    Manages the list of URLs to visit (frontier) and keeps track of visited URLs.
-    
-    Attributes:
-        to_visit (list): Queue of URLs that still need to be crawled.
-        visited (set): Set of URLs that have already been crawled.
-    
-    Purpose:
-        - Avoid visiting the same URL multiple times.
-        - Provide a central place to manage which URLs to crawl next.
+    Manages the crawling frontier: URLs to visit and visited URLs.
     """
     
     def __init__(self):
-        """
-        Initializes an empty frontier.
-        """
-        self.to_visit = []       # Queue of URLs to visit (FIFO)
-        self.visited = set()     # Set of URLs that have already been visited
+        self.to_visit = []       # URLs waiting to be crawled (the frontier)
+        self.visited = set()     # URLs already crawled
     
     def add_url(self, url):
-        """
-        Adds a new URL to the frontier.
-        
-        Args:
-            url (str): The URL to add.
-            
-        Notes:
-            - Strips extra spaces.
-            - Will NOT add the URL if it has already been visited.
-            - Will NOT add the URL if it is already in the queue.
-        """
-        url = url.strip()  # remove leading/trailing whitespace
-        if url not in self.visited and url not in self.to_visit:
-            self.to_visit.append(url)  # add to the end of the queue
+        """Add URL to the frontier if not visited and not already in queue."""
+        url = url.strip()
+        if url and url not in self.visited and url not in self.to_visit:
+            self.to_visit.append(url)
     
     def get_next_url(self):
-        """
-        Returns the next URL to crawl from the frontier.
-        
-        Returns:
-            str or None: The next URL to visit, or None if the frontier is empty.
-        
-        Notes:
-            - Removes the URL from the queue (FIFO order).
-            - Marks the URL as visited by adding it to the visited set.
-        """
+        """Return next URL from frontier and mark as visited."""
         if not self.to_visit:
-            return None  # no URLs left to visit
-        url = self.to_visit.pop(0)  # take the first URL from the queue
-        self.visited.add(url)       # mark it as visited
+            return None
+        url = self.to_visit.pop(0)
+        self.visited.add(url)
         return url
+
+# --------------------------
+# Demo showing the frontier
+# --------------------------
+if __name__ == "__main__":
+    frontier = FrontierManager()
+
+    # Add URLs to the frontier
+    frontier.add_url("https://example.com/page1")
+    frontier.add_url("https://example.com/page2")
+    frontier.add_url("https://example.com/page3")
+
+    # Check the frontier BEFORE crawling
+    print("Frontier before crawling:", frontier.to_visit)
+    # Output: ['https://example.com/page1', 'https://example.com/page2', 'https://example.com/page3']
+
+    # Crawl URLs one by one
+    while True:
+        url = frontier.get_next_url()
+        if not url:
+            break
+        print("Crawling:", url)
+        print("Frontier now:", frontier.to_visit)
+        print("Visited:", frontier.visited)
+
+    # Final state
+    print("Frontier after crawling:", frontier.to_visit)  # Should be empty
+    print("All visited URLs:", frontier.visited)
