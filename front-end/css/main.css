@@ -1,0 +1,245 @@
+/* =======================
+   Reset & Base Styles
+======================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #3498db;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #1d6fa5;
+}
+
+/* =======================
+   Wrapper
+======================= */
+#wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =======================
+   Main Content
+======================= */
+#main {
+    flex: 1;
+    padding: 2rem;
+}
+
+#main h1, #main h2, #main h3 {
+    color: #222;
+}
+
+#main p {
+    margin-bottom: 1rem;
+}
+
+button, .button {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+button:hover, .button:hover {
+    background-color: #1d6fa5;
+}
+
+/* =======================
+   Banner
+======================= */
+#banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #eef6fb;
+    padding: 3rem;
+    border-radius: 10px;
+    margin-bottom: 3rem;
+}
+
+#banner .content {
+    max-width: 600px;
+}
+
+#banner .image {
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+/* =======================
+   Features
+======================= */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.features article {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.features article .icon {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 1rem;
+}
+
+/* =======================
+   Posts / Portfolio
+======================= */
+.posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.posts article {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.posts article img {
+    width: 100%;
+    display: block;
+}
+
+.posts article h3 {
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.posts article p {
+    padding: 0 1rem 1rem 1rem;
+}
+
+/* =======================
+   Sidebar
+======================= */
+#sidebar {
+    width: 300px;
+    background-color: #fff;
+    padding: 2rem;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#sidebar h2 {
+    color: #222;
+    margin-bottom: 1rem;
+}
+
+#sidebar ul {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+#sidebar ul li {
+    margin-bottom: 0.8rem;
+}
+
+#sidebar ul li a {
+    color: #3498db;
+}
+
+#sidebar ul li a:hover {
+    color: #1d6fa5;
+}
+
+/* =======================
+   Contact
+======================= */
+.contact li {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+/* =======================
+   Footer
+======================= */
+#footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 3rem;
+}
+
+/* =======================
+   Responsive
+======================= */
+@media (max-width: 1024px) {
+    #wrapper {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #ddd;
+        margin-top: 2rem;
+    }
+
+    #banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #banner .image {
+        margin-top: 1.5rem;
+        max-width: 80%;
+    }
+}
+/* =======================
+   Internship Table
+======================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+table th, table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+table th {
+    background-color: #f0f4f8;
+    color: #222;
+}
+
+table tr:hover {
+    background-color: #eef6fb;
+}
