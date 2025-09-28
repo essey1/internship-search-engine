@@ -1,145 +1,287 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>Internship Search Portal</title>
-    <link rel="stylesheet" href="front-end/css/main.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Internship Search Portal</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <script src="https://kit.fontawesome.com/6d5c53f5fc.js" crossorigin="anonymous"></script>
+
+  <!-- AOS for animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark { background:#121212; color:#eee; }
+
+    header {
+      padding:1.5rem;
+      text-align:center;
+    }
+
+    /* Hero Section */
+    #banner {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:4rem 2rem;
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      color:white;
+    }
+    #banner h1 {font-size:2.5rem; margin-bottom:1rem;}
+    #banner p {font-size:1.2rem; margin-bottom:2rem;}
+
+    #internship-search {
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.8rem;
+      justify-content:center;
+    }
+    #internship-search input, #internship-search select {
+      padding:0.7rem;
+      border:none;
+      border-radius:8px;
+      flex:1 1 200px;
+    }
+    #internship-search button {
+      padding:0.7rem 1.5rem;
+      background:#22c55e;
+      border:none;
+      border-radius:8px;
+      color:white;
+      font-weight:600;
+      cursor:pointer;
+      transition: background 0.3s;
+    }
+    #internship-search button:hover { background:#16a34a; }
+
+    /* Categories */
+    section {
+      padding:4rem 2rem;
+      max-width:1100px;
+      margin:auto;
+    }
+    section header.major h2 {
+      text-align:center;
+      font-size:2rem;
+      margin-bottom:2rem;
+    }
+    .features {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap:1.5rem;
+    }
+    .features article {
+      background:white;
+      border-radius:12px;
+      padding:2rem;
+      text-align:center;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      transition:transform 0.3s, box-shadow 0.3s;
+    }
+    .features article:hover {
+      transform:translateY(-8px);
+      box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    }
+    .features .icon {
+      font-size:2.5rem;
+      margin-bottom:1rem;
+      color:#4f46e5;
+    }
+
+    /* Featured Internships */
+    .featured {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:1.5rem;
+      margin-top:2rem;
+    }
+    .job-card {
+      background:white;
+      padding:1.5rem;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    }
+    .job-card h3 {margin-bottom:0.5rem;}
+    .job-card .apply {
+      display:inline-block;
+      margin-top:1rem;
+      background:#4f46e5;
+      color:white;
+      padding:0.6rem 1rem;
+      border-radius:6px;
+      text-decoration:none;
+      transition: background 0.3s;
+    }
+    .job-card .apply:hover {background:#3730a3;}
+
+    /* Call to Action */
+    .cta {
+      text-align:center;
+      margin-top:3rem;
+    }
+    .cta .button {
+      display:inline-block;
+      margin-top:1rem;
+      background:#f97316;
+      color:white;
+      padding:0.8rem 1.6rem;
+      border-radius:10px;
+      font-weight:600;
+      text-decoration:none;
+      transition:background 0.3s;
+    }
+    .cta .button:hover {background:#ea580c;}
+
+    /* Footer */
+    footer {
+      padding:2rem;
+      text-align:center;
+      background:#111827;
+      color:#9ca3af;
+      margin-top:3rem;
+    }
+    footer .social i {
+      margin:0 0.5rem;
+      font-size:1.5rem;
+      color:white;
+      transition:color 0.3s;
+      cursor:pointer;
+    }
+    footer .social i:hover {color:#f59e0b;}
+    .dark-toggle {
+      cursor:pointer;
+      margin-top:1rem;
+      font-size:1.1rem;
+    }
+  </style>
 </head>
-<body class="is-preload">
+<body>
 
-    <div id="wrapper">
+  <!-- Header -->
+  <header>
+    <h1>Intern Hub</h1>
+  </header>
 
-        <!-- Header -->
-        <header id="header">
-           
-        </header>
+  <!-- Hero -->
+  <section id="banner">
+    <h1>Find Your Internship</h1>
+    <p><span id="typed"></span></p>
+    <form id="internship-search">
+      <input type="text" placeholder="Keyword or Position" />
+      <input type="text" placeholder="City, State, or Country" />
+      <select>
+        <option value="">Select Program Type</option>
+        <option value="engineering">Engineering</option>
+        <option value="marketing">Marketing</option>
+        <option value="finance">Finance</option>
+        <option value="hr">Human Resources</option>
+        <option value="research">Research</option>
+      </select>
+      <button type="submit">🚀 Launch My Search</button>
+    </form>
+  </section>
 
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
-
-                <!-- Hero / Internship Search -->
-                <section id="banner">
-                    <div class="content">
-                        <header>
-                            <h1>Find Your Internship</h1>
-                            <p>Explore opportunities, apply directly, and kickstart your career!</p>
-                        </header>
-                        <form id="internship-search" action="#" method="get">
-                            <input type="text" name="keyword" placeholder="Keyword or Position" />
-                            <input type="text" name="location" placeholder="City, State, or Country" />
-                            <select name="program">
-                                <option value="">Select Program Type</option>
-                                <option value="engineering">Engineering</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="finance">Finance</option>
-                                <option value="hr">Human Resources</option>
-                                <option value="research">Research</option>
-                            </select>
-                            <button type="submit" class="button big">Search Internships</button>
-                        </form>
-                    </div>
-                    <span class="image object">
-                        <img src="images/banner.jpg" alt="Internship Opportunities" />
-                    </span>
-                </section>
-
-                <!-- Internship Categories -->
-                <section>
-                    <header class="major">
-                        <h2>Internship Categories</h2>
-                    </header>
-                    <div class="features">
-                        <article>
-                            <span class="icon fa-cogs"></span>
-                            <div class="content">
-                                <h3>Engineering & Tech</h3>
-                                <p>Internships in software, hardware, and product development roles.</p>
-                            </div>
-                        </article>
-                        <article>
-                            <span class="icon fa-briefcase"></span>
-                            <div class="content">
-                                <h3>Business & Marketing</h3>
-                                <p>Opportunities in marketing, sales, and business development.</p>
-                            </div>
-                        </article>
-                        <article>
-                            <span class="icon fa-users"></span>
-                            <div class="content">
-                                <h3>Operations & HR</h3>
-                                <p>Support roles in HR, finance, and administration.</p>
-                            </div>
-                        </article>
-                        <article>
-                            <span class="icon fa-graduation-cap"></span>
-                            <div class="content">
-                                <h3>Research & Academia</h3>
-                                <p>Internships that focus on research, lab work, and academic projects.</p>
-                            </div>
-                        </article>
-                    </div>
-                </section>
-
-                <!-- Call to Action -->
-                <section>
-                    <header class="major">
-                        <h2>Join Our Internship Network</h2>
-                    </header>
-                    <p>Sign up to receive alerts about new internships and program updates.</p>
-                    <ul class="actions">
-                        <li><a href="#" class="button big">Sign Up</a></li>
-                    </ul>
-                </section>
-
-            </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <div class="inner">
-
-                <!-- Menu -->
-                <nav id="menu">
-                    <header class="major">
-                        <h2>Menu</h2>
-                    </header>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </nav>
-
-                <!-- Contact -->
-                <section>
-                    <header class="major">
-                        <h2>Contact</h2>
-                    </header>
-                    <ul class="contact">
-                        <li class="icon solid fa-envelope"><a href="mailto:interns@example.com">interns@example.com</a></li>
-                        <li class="icon solid fa-phone">+1 (254) 292-9312</li>
-                        <li class="icon solid fa-home">123 Campus Drive<br />City, State ZIP</li>
-                    </ul>
-                </section>
-
-                <!-- Footer -->
-                <footer id="footer">
-                    <p>&copy; 2025 Intern Hub. All rights reserved.</p>
-                </footer>
-
-            </div>
-        </div>
-
+  <!-- Categories -->
+  <section>
+    <header class="major"><h2>Internship Categories</h2></header>
+    <div class="features">
+      <article data-aos="fade-up">
+        <span class="icon fas fa-cogs"></span>
+        <h3>Engineering & Tech</h3>
+        <p>Software, hardware, and product development internships.</p>
+      </article>
+      <article data-aos="fade-up" data-aos-delay="100">
+        <span class="icon fas fa-briefcase"></span>
+        <h3>Business & Marketing</h3>
+        <p>Marketing, sales, and business development roles.</p>
+      </article>
+      <article data-aos="fade-up" data-aos-delay="200">
+        <span class="icon fas fa-users"></span>
+        <h3>Operations & HR</h3>
+        <p>Support roles in HR, finance, and administration.</p>
+      </article>
+      <article data-aos="fade-up" data-aos-delay="300">
+        <span class="icon fas fa-graduation-cap"></span>
+        <h3>Research & Academia</h3>
+        <p>Research, lab work, and academic projects.</p>
+      </article>
     </div>
+  </section>
 
-    <!-- Scripts -->
-    <script src="front-end/js/jquery.min.js"></script>
-    <script src="front-end/js/browser.min.js"></script>
-    <script src="front-end/js/breakpoints.min.js"></script>
-    <script src="front-end/js/util.js"></script>
-    <script src="front-end/js/main.js"></script>
+  <!-- Featured Internships -->
+  <section>
+    <header class="major"><h2>Featured Internships</h2></header>
+    <div class="featured">
+      <div class="job-card" data-aos="fade-right">
+        <h3>Software Engineering Intern</h3>
+        <p>Work with our dev team to build scalable solutions.</p>
+        <a href="#" class="apply">Apply Now</a>
+      </div>
+      <div class="job-card" data-aos="fade-up">
+        <h3>Marketing Intern</h3>
+        <p>Create campaigns, manage socials, and drive growth.</p>
+        <a href="#" class="apply">Apply Now</a>
+      </div>
+      <div class="job-card" data-aos="fade-left">
+        <h3>Research Assistant Intern</h3>
+        <p>Assist in lab experiments and academic projects.</p>
+        <a href="#" class="apply">Apply Now</a>
+      </div>
+    </div>
+  </section>
 
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Join Our Internship Network</h2>
+    <p>📩 Get alerts about new opportunities and career tips!</p>
+    <a href="#" class="button">Sign Up</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Intern Hub. Designed with ❤️</p>
+    <div class="social">
+      <i class="fab fa-linkedin"></i>
+      <i class="fab fa-twitter"></i>
+      <i class="fab fa-instagram"></i>
+    </div>
+    <div class="dark-toggle">🌙 Toggle Dark Mode</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Typed.js effect
+    new Typed('#typed', {
+      strings: ["Explore opportunities.", "Kickstart your career.", "Find your dream role."],
+      typeSpeed: 50,
+      backSpeed: 30,
+      loop: true
+    });
+
+    // Init AOS
+    AOS.init();
+
+    // Dark mode toggle
+    document.querySelector('.dark-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+    });
+  </script>
 </body>
 </html>
