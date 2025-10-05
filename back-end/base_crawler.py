@@ -1,37 +1,39 @@
 import requests
 from bs4 import BeautifulSoup
+from opportunity import Opportunity
 
-class Crawler:
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; MyCrawler/1.0; +https://example.com/bot)"
+}
+
+
+class BaseCrawler:
     """
-    Base class for fetching web pages and storing their HTML content.
-    
-    Attributes:
-        url (str): URL of the page to crawl.
-        soup (BeautifulSoup object): Parsed HTML of the fetched page.
+    Takes URLs from FrontierManager, fetches HTML, passes to parser.
     """
-    def __init__(self, url):
-        self.url = url
-        self.soup = None
-    
-    # Fetch the page HTML
-    def fetch_page(self):
-        try:
-            response = requests.get(self.url, timeout=10)
-            response.raise_for_status()  # raise exception for HTTP errors
-            self.soup = BeautifulSoup(response.text, "html.parser")
-            return self.soup
-        except requests.RequestException as e:
-            print(f"Error fetching {self.url}: {e}")
-            return None
-    
-    # extract links from the page for further crawling
-    def extract_links(self):
-        if not self.soup:
-            print("Page not fetched yet. Run fetch_page() first.")
-            return []
-        
-        links = []
-        for a_tag in self.soup.find_all("a", href=True):
-            links.append(a_tag["href"])
-        
-        return links
+    def __init__(self, frontier_manager, parser):
+        self.frontier_manager = frontier_manager
+        self.parser = parser
+
+    def crawl(self):
+        """
+        Iterate through all URLs in frontier, parse them into Opportunity objects.
+        """
+        all_opps = []
+        while True:
+            url = self.frontier_manager.get_next_url()
+            if not url:
+                break
+
+            print(f"Crawling: {url}")
+            try:
+                html = requests.get(url, headers=HEADERS, timeout=15).text
+            except Exception as e:
+                print(f"Error fetching {url}: {e}")
+                continue
+
+            soup = BeautifulSoup(html, 'html.parser')
+            opps = self.parser.parse(soup, source_url=url)
+            all_opps.extend(opps)
+
+        return all_opps
