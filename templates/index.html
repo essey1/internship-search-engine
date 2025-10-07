@@ -18,21 +18,35 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   
   <style>
-    /* Keep all your original CSS here (from your inline style) */
     * {margin:0; padding:0; box-sizing:border-box;}
     body {font-family: 'Poppins', sans-serif; background: #f8f9fa; color: #333; line-height: 1.6; transition: background 0.3s, color 0.3s;}
     body.dark {background:#121212; color:#eee;}
-    header {padding:1.5rem; text-align:center;}
+    
+    /* Header & Navbar */
+    header {padding:1rem 2rem; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    header nav {display:flex; justify-content:space-between; align-items:center;}
+    header nav ul {list-style:none; display:flex; gap:1.5rem;}
+    header nav a {text-decoration:none; color:#4f46e5; font-weight:600;}
+    body.dark header {background:#1f2937;}
+    body.dark header nav a {color:#d1d5db;}
 
     /* Hero Section */
     #banner {display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:4rem 2rem; background: linear-gradient(135deg, #4f46e5, #9333ea); color:white;}
     #banner h1 {font-size:2.5rem; margin-bottom:1rem;}
     #banner p {font-size:1.2rem; margin-bottom:2rem;}
 
-    #internship-search {display:flex; flex-wrap:wrap; gap:0.8rem; justify-content:center;}
+    #internship-search {display:flex; flex-wrap:wrap; gap:0.8rem; justify-content:center; position:relative;}
     #internship-search input, #internship-search select {padding:0.7rem; border:none; border-radius:8px; flex:1 1 200px;}
     #internship-search button {padding:0.7rem 1.5rem; background:#22c55e; border:none; border-radius:8px; color:white; font-weight:600; cursor:pointer; transition: background 0.3s;}
     #internship-search button:hover {background:#16a34a;}
+    body.dark #internship-search input, body.dark #internship-search select {background:#2d2d2d; color:#fff;}
+
+    #suggestions {display:none; position:absolute; top:45px; left:0; right:0; background:white; border:1px solid #ccc; border-radius:6px; z-index:1000;}
+    body.dark #suggestions {background:#2d2d2d; border-color:#444;}
+    #suggestions ul {list-style:none; margin:0; padding:0;}
+    #suggestions li {padding:8px; cursor:pointer;}
+    #suggestions li:hover {background:#f0f0f0;}
+    body.dark #suggestions li:hover {background:#444;}
 
     /* Categories */
     section {padding:4rem 2rem; max-width:1100px; margin:auto;}
@@ -41,6 +55,7 @@
     .features article {background:white; border-radius:12px; padding:2rem; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:transform 0.3s, box-shadow 0.3s;}
     .features article:hover {transform:translateY(-8px); box-shadow:0 8px 20px rgba(0,0,0,0.15);}
     .features .icon {font-size:2.5rem; margin-bottom:1rem; color:#4f46e5;}
+    body.dark .features article {background:#1f2937; color:#eee; box-shadow:0 2px 10px rgba(255,255,255,0.05);}
 
     /* Featured Internships */
     .featured {display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:2rem;}
@@ -48,11 +63,13 @@
     .job-card h3 {margin-bottom:0.5rem;}
     .job-card .apply {display:inline-block; margin-top:1rem; background:#4f46e5; color:white; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; transition: background 0.3s;}
     .job-card .apply:hover {background:#3730a3;}
+    body.dark .job-card {background:#1f2937; color:#eee; box-shadow:0 2px 10px rgba(255,255,255,0.05);}
 
     /* Call to Action */
     .cta {text-align:center; margin-top:3rem;}
     .cta .button {display:inline-block; margin-top:1rem; background:#f97316; color:white; padding:0.8rem 1.6rem; border-radius:10px; font-weight:600; text-decoration:none; transition:background 0.3s;}
     .cta .button:hover {background:#ea580c;}
+    .cta-form input {margin-right:0.5rem;}
 
     /* Footer */
     footer {padding:2rem; text-align:center; background:#111827; color:#9ca3af; margin-top:3rem;}
@@ -63,16 +80,24 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header / Navbar -->
   <header>
-    <h1>Intern Hub</h1>
+    <nav>
+      <h1>Intern Hub</h1>
+      <ul>
+        <li><a href="#banner">Home</a></li>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#featured">Featured</a></li>
+        <li><a href="#cta">Join</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- Hero Section -->
   <section id="banner">
     <h1>Find Your Internship</h1>
     <p><span id="typed"></span></p>
-    <form id="internship-search" style="position:relative;">
+    <form id="internship-search">
       <input type="text" id="titleInput" placeholder="Keyword or Position" autocomplete="off" />
       <input type="text" placeholder="City, State, or Country" />
       <select>
@@ -86,19 +111,16 @@
       <button type="submit">🚀 Launch My Search</button>
 
       <!-- Suggestions Dropdown -->
-      <div id="suggestions" style="display:none; position:absolute; top:45px; left:0; right:0; background:white; border:1px solid #ccc; border-radius:6px; z-index:1000;">
-        <ul style="list-style:none; margin:0; padding:0;"></ul>
+      <div id="suggestions">
+        <ul></ul>
       </div>
     </form>
-
-    <!-- Keywords & Results -->
     <div id="keywords" style="margin-top:20px; font-weight:bold;"></div>
     <div id="results" style="margin-top:20px;"></div>
   </section>
 
-  <!-- Categories, Featured Internships, CTA, Footer -->
-  <!-- Keep these exactly as before -->
-  <section>
+  <!-- Categories -->
+  <section id="categories">
     <header class="major"><h2>Internship Categories</h2></header>
     <div class="features">
       <article data-aos="fade-up"><span class="icon fas fa-cogs"></span><h3>Engineering & Tech</h3><p>Software, hardware, and product development internships.</p></article>
@@ -108,7 +130,8 @@
     </div>
   </section>
 
-  <section>
+  <!-- Featured Internships -->
+  <section id="featured">
     <header class="major"><h2>Featured Internships</h2></header>
     <div class="featured">
       <div class="job-card" data-aos="fade-right"><h3>Software Engineering Intern</h3><p>Work with our dev team to build scalable solutions.</p><a href="#" class="apply">Apply Now</a></div>
@@ -117,12 +140,18 @@
     </div>
   </section>
 
-  <section class="cta">
+  <!-- Call to Action -->
+  <section class="cta" id="cta">
     <h2>Join Our Internship Network</h2>
     <p>📩 Get alerts about new opportunities and career tips!</p>
+    <form class="cta-form">
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
     <a href="#" class="button">Sign Up</a>
   </section>
 
+  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Intern Hub. Designed with ❤️</p>
     <div class="social">
@@ -140,9 +169,38 @@
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
   <script>
+    // Typed.js
     new Typed('#typed', { strings: ["Explore opportunities.", "Kickstart your career.", "Find your dream role."], typeSpeed:50, backSpeed:30, loop:true });
+
+    // AOS
     AOS.init();
+
+    // Dark mode toggle
     document.querySelector('.dark-toggle').addEventListener('click', () => { document.body.classList.toggle('dark'); });
+
+    // Search suggestions
+    const suggestionsList = document.querySelector("#suggestions ul");
+    const suggestionsBox = document.getElementById("suggestions");
+    const input = document.getElementById("titleInput");
+    const suggestions = ["Software Engineering", "Marketing", "Finance", "Research", "Data Science"];
+
+    input.addEventListener("input", () => {
+      const value = input.value.toLowerCase();
+      const matches = suggestions.filter(s => s.toLowerCase().includes(value));
+      if (matches.length > 0) {
+        suggestionsBox.style.display = "block";
+        suggestionsList.innerHTML = matches.map(m => `<li>${m}</li>`).join("");
+      } else {
+        suggestionsBox.style.display = "none";
+      }
+    });
+
+    suggestionsList.addEventListener("click", e => {
+      if (e.target.tagName === "LI") {
+        input.value = e.target.textContent;
+        suggestionsBox.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
