@@ -1,15 +1,12 @@
 from flask import Flask, render_template, request, jsonify
-import json
 import pandas as pd
 from flask_cors import CORS
 
-
+# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-with open("front-end/data/keywords.json") as f:
-    keywords_db = json.load(f)
-
+# Load your CSV (adjust path if needed)
 internships_df = pd.read_csv("research_internships.csv")
 
 @app.route("/")
@@ -19,24 +16,22 @@ def index():
 @app.route("/search", methods=["POST"])
 def search():
     data = request.get_json()
-    user_title = data.get("title", "").strip().lower()  # User input
-
-    # Get keywords from JSON mapping (case-insensitive)
-    keywords = keywords_db.get(user_title.title(), [])  # Maps 'software engineer' -> 'Software Engineer' key
+    user_title = data.get("title", "").strip().lower()
 
     results = []
+
+    # Use 'Role' instead of 'Title' since your CSV has that column
     for _, row in internships_df.iterrows():
-        # Check if any keyword exists in the CSV title
-        if any(kw.lower() in row['Title'].lower() for kw in keywords):
+        role = str(row.get("Role", "")).lower()
+        if user_title in role:
             results.append({
-                "title": row['Title'],
-                "company": row.get('Company', 'Unknown'),
-                "location": row.get('Location', 'Unknown'),
-                "link": row.get('Link', '#')
+                "title": row.get("Role", "Unknown"),
+                "company": row.get("Company", "Unknown"),
+                "location": row.get("Location", "Unknown"),
+                "link": row.get("Application", "#")
             })
 
-    return jsonify({"keywords": keywords, "opportunities": results})
-
+    return jsonify({"opportunities": results})
 
 if __name__ == "__main__":
     app.run(debug=True)
