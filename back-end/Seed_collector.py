@@ -49,29 +49,29 @@ class AutoSeedCollector:
         return None
 
 
-    def _guess_career_page(self, official_url):
-        """
-        Given an official URL, try to guess its career page by appending
-        common paths like /careers or /jobs.
-        """
-        if not official_url:
-            return None
+    # def _guess_career_page(self, official_url):
+    #     """
+    #     Given an official URL, try to guess its career page by appending
+    #     common paths like /careers or /jobs.
+    #     """
+    #     if not official_url:
+    #         return None
 
-        base = official_url.rstrip('/')
-        candidates = [
-            base + '/careers',
-            base + '/jobs',
-            base + '/career',
-            base + '/about/careers',
-        ]
-        for c in candidates:
-            try:
-                resp = requests.head(c, headers=HEADERS, timeout=5, allow_redirects=True)
-                if resp.status_code < 400:
-                    return resp.url  # follow redirect
-            except Exception:
-                continue
-        return None
+    #     base = official_url.rstrip('/')
+    #     candidates = [
+    #         base + '/careers',
+    #         base + '/jobs',
+    #         base + '/career',
+    #         base + '/about/careers',
+    #     ]
+    #     for c in candidates:
+    #         try:
+    #             resp = requests.head(c, headers=HEADERS, timeout=5, allow_redirects=True)
+    #             if resp.status_code < 400:
+    #                 return resp.url  # follow redirect
+    #         except Exception:
+    #             continue
+    #     return None
 
     def discover_career_pages(self, wikipedia_list_url):
         """
@@ -100,9 +100,53 @@ class AutoSeedCollector:
             wiki_url = urljoin(wikipedia_list_url, company_link['href'])
 
             official = self._get_official_website(wiki_url)
-            career = self._guess_career_page(official)
+            career = self._discover_job_search_page(official)
 
             print(f"{company_name}: wiki={wiki_url}, official={official}, career={career}")
 
             if career:
                 self.frontier_manager.add_url(career)
+    
+
+    def _discover_job_search_page(self, official_url):
+        """
+        Try to find the real job listings/search page by:
+        1. Guessing common career URLs
+        2. Opening the career page and scanning for job search links
+        """
+        if not official_url:
+            return None
+
+        base = official_url.rstrip('/')
+        candidates = [
+            base + '/careers',
+            base + '/jobs',
+            base + '/career',
+            base + '/about/careers',
+        ]
+
+        for c in candidates:
+            try:
+                resp = requests.get(c, headers=HEADERS, timeout=10)
+                if resp.status_code >= 400:
+                    continue
+
+                soup = BeautifulSoup(resp.text, 'html.parser')
+
+                # Look for links containing job-related text
+                for a in soup.find_all('a', href=True):
+                    text = a.get_text(strip=True).lower()
+                    if any(keyword in text for keyword in ['search', 'jobs', 'careers', 'openings', 'apply']):
+                        href = a['href']
+                        full_url = urljoin(c, href)
+                        if full_url.startswith('http'):
+                            return full_url  # Found real job search engine link
+
+                # If no internal link found, still return valid career page
+                return c
+
+            except Exception:
+                continue
+
+        return None
+
